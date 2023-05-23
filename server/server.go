@@ -25,6 +25,7 @@ const (
 	_defaultPort    = ":8081"
 	_statusSaved    = "Image was saved to image/ folder successfully"
 	_statusNotSaved = "Image was not saved"
+	_redisAddress   = "localhost:6379"
 )
 
 type YouTubeServer struct {
@@ -37,7 +38,7 @@ func NewYouTubeServer() *YouTubeServer {
 	return &YouTubeServer{
 		Logger: utils.NewLogger(),
 		Redis: redis.NewClient(&redis.Options{
-			Addr:     "localhost:6379",
+			Addr:     _redisAddress,
 			Password: "",
 			DB:       0,
 		}),
@@ -76,7 +77,7 @@ func (s *YouTubeServer) GetThumbnail(ctx context.Context, video *protos.Video) (
 
 func (s *YouTubeServer) SaveThumbnail(ctx context.Context, thumbnail *protos.Thumbnail) (*protos.SaveStatus, error) {
 	if thumbnail == nil {
-		return &protos.SaveStatus{Status: _statusNotSaved}, errors.New("Something wrong with Thumbnail")
+		return &protos.SaveStatus{Status: _statusNotSaved}, errors.New("wrong thumbnail was generated")
 	}
 
 	r := regexp.MustCompile(`vi/(.*?)/hqdefault.jpg`)

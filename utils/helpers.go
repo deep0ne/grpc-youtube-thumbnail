@@ -16,12 +16,12 @@ const (
 var ErrWrongURL = errors.New("wrong youtube video URL")
 
 /*
-Ссылки на youtube видео могут быть двух форматов:
+Youtube links can be of two types:
 
 1. https://www.youtube.com/watch?v=some_id_here
 2. https://youtu.be/some_id_here
 
-Функция FormThumbnailURL достаёт id видео (some_id_here) и формирует из него ссылку, по которой лежит thumbnail
+FormThumbnailURL gets the id of the video (some_id_here) and forms a thumbnail link
 */
 
 func FormThumbnailURL(video *protos.Video) (string, error) {
