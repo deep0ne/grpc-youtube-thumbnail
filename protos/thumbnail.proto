@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "/protos";
+
+message Video {
+    string URL = 1;
+}
+
+message Thumbnail {
+    string URL = 1;
+}
+
+message SaveStatus {
+    string Status = 1;
+}
+
+service YouTubeThumbnail {
+    rpc GetThumbnail(Video) returns (Thumbnail);
+    rpc SaveThumbnail(Thumbnail) returns(SaveStatus);
+}

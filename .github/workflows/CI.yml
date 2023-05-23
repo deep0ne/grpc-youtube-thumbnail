@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: --name thumbnail-redis
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+
+      - name: Install dependencies
+        run: go mod tidy
+      
+      - name: Run tests
+        run: go test ./...
+
+      - name: Cleanup
+        run: rm -r images
