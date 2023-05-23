@@ -17,8 +17,6 @@ import (
 
 const address string = "localhost:8081"
 
-// Uber Go Style error naming
-
 type URLFlags []string
 
 // interface implementation for flag.Var
