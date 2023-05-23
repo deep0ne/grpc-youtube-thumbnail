@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/deep0ne/grpc-youtube-thumbnail/protos"
@@ -29,7 +28,6 @@ func FormThumbnailURL(video *protos.Video) (string, error) {
 
 	if strings.Contains(video.URL, "watch") {
 		splitted := strings.Split(video.URL, "=")
-		fmt.Println(splitted)
 		if len(splitted) != 2 {
 			return "", ErrWrongURL
 		}

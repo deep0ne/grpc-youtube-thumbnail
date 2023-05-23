@@ -18,10 +18,6 @@ import (
 const address string = "localhost:8081"
 
 // Uber Go Style error naming
-var (
-	ErrGettingThumbnail = errors.New("error getting thumbnail")
-	ErrSavingThumbnail  = errors.New("error saving thumbnail")
-)
 
 type URLFlags []string
 
@@ -124,16 +120,15 @@ func run() error {
 				defer wg.Done()
 				thumbnail, err := c.GetThumbnail(context.Background(), video)
 				if err != nil {
-					errChan <- ErrGettingThumbnail
-					return
+					errChan <- err
 				}
 
 				status, err := c.SaveThumbnail(context.Background(), thumbnail)
 				if err != nil {
-					errChan <- ErrSavingThumbnail
-					return
+					errChan <- err
+				} else {
+					log.Println("Thumbnail Status--->", status.Status)
 				}
-				log.Println(status.Status)
 			}(video)
 		}
 
@@ -152,12 +147,12 @@ func run() error {
 		for _, video := range videos {
 			thumbnail, err := c.GetThumbnail(context.Background(), video)
 			if err != nil {
-				return ErrGettingThumbnail
+				return err
 			}
 
 			status, err := c.SaveThumbnail(context.Background(), thumbnail)
 			if err != nil {
-				return ErrSavingThumbnail
+				return err
 			}
 			log.Println(status.Status)
 		}

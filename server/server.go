@@ -28,6 +28,8 @@ const (
 	_redisAddress   = "localhost:6379"
 )
 
+var ErrThumbnail = errors.New("thumbnail was not generated properly")
+
 type YouTubeServer struct {
 	protos.UnimplementedYouTubeThumbnailServer
 	Logger *logrus.Logger
@@ -77,11 +79,16 @@ func (s *YouTubeServer) GetThumbnail(ctx context.Context, video *protos.Video) (
 
 func (s *YouTubeServer) SaveThumbnail(ctx context.Context, thumbnail *protos.Thumbnail) (*protos.SaveStatus, error) {
 	if thumbnail == nil {
-		return &protos.SaveStatus{Status: _statusNotSaved}, errors.New("wrong thumbnail was generated")
+		return &protos.SaveStatus{Status: _statusNotSaved}, ErrThumbnail
 	}
 
 	r := regexp.MustCompile(`vi/(.*?)/hqdefault.jpg`)
-	filename := r.FindStringSubmatch(thumbnail.URL)[1] + ".jpg"
+	matches := r.FindStringSubmatch(thumbnail.URL)
+	if len(matches) < 2 {
+		return &protos.SaveStatus{Status: _statusNotSaved}, ErrThumbnail
+	}
+
+	filename := matches[1] + ".jpg"
 
 	file, err := os.Create(filepath.Join("../images", filename))
 	if err != nil {
